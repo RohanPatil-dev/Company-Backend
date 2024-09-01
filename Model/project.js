@@ -12,7 +12,7 @@ const projectSchema = mongoose.Schema({
     },
     Reason: {
         type: String,
-        enum: ["For Business", "For Personal", "For Dealership", "For Transport"],
+        enum: ["Business", "Personal", "Dealership", "Transport"],
         default: "For Business",
         required: false
     },
