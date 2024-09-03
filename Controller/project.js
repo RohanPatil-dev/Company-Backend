@@ -26,7 +26,7 @@ async function createProject(req, res) {
                 if (existingProjectTheme) {
                     return res.status(400).json({ err: "Project Theme is already exist !" })
                 }
-                const project = new projects({userId : result._id,projectTheme: projectTheme, Reason: Reason, Type: Type, Division: Division, Category: Category, Priority: Priority, Department: Department, start_Date: start_Date, End_Date: End_Date, Location: Location })
+                const project = new projects({ userId: result._id, projectTheme: projectTheme, Reason: Reason, Type: Type, Division: Division, Category: Category, Priority: Priority, Department: Department, start_Date: start_Date, End_Date: End_Date, Location: Location })
 
                 await project.save()
 
@@ -44,9 +44,9 @@ async function updateStatus(req, res) {
         jwt.verify(req.token, secret, async (err, result) => {
             const id = req.params.id
 
-            const {Status} = req.body
+            const { Status } = req.body
 
-            const project = await projects.findByIdAndUpdate(id,{Status}, { new: true })
+            const project = await projects.findByIdAndUpdate(id, { Status }, { new: true })
 
             return res.json({ data: project })
 
@@ -80,4 +80,18 @@ async function getProjectData(req, res) {
     }
 }
 
-module.exports = { createProject, updateStatus, getProjectData }
+
+async function getAllProjectData(req, res) {
+    try {
+        jwt.verify(req.token, secret, async (err, result) => {
+
+            const getAllData = await projects.find({ userId: result._id })
+
+            return res.status(200).json({ msg: getAllData })
+        })
+    } catch (error) {
+        return res.status(400).json({ err: "Invalid Data" })
+    }
+}
+
+module.exports = { createProject, updateStatus, getProjectData, getAllProjectData }

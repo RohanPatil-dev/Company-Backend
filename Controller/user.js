@@ -8,7 +8,7 @@ async function signup(req, res) {
     try {
         const { username, email, password } = req.body
 
-        const existingEmail = await user.findOne({email : email})
+        const existingEmail = await user.findOne({ email: email })
 
         if (!username && !email && !password) {
             return res.status(400).json({ msg: "Form is empty !" })
@@ -16,7 +16,7 @@ async function signup(req, res) {
             return res.status(400).json({ msg: "Username is not defined !" })
         } else if (!email) {
             return res.status(400).json({ msg: "Email is not defined !" })
-        }else if (existingEmail.email == email) {
+        } else if (existingEmail.email == email) {
             return res.status(400).json({ msg: "Email is already exist !" })
         }
         else if (!password) {
@@ -53,25 +53,25 @@ async function signin(req, res) {
         const findEmail = await user.findOne({ email: email })
 
         if (!email && !password) {
-            return res.status(400).json({ msg: "Form is empty !" })
+            return res.status(400).json({ err: "Form is empty !" })
         } else if (!email) {
-            return res.status(400).json({ msg: "Email is not defined !" })
+            return res.status(400).json({ err: "Email is not defined !" })
         } else if (!password) {
-            return res.status(400).json({ msg: "Password is not defined !" })
+            return res.status(400).json({ err: "Password is not defined !" })
         }
         else if (password.length > 8) {
-            return res.status(400).json({ msg: "password is over the 8 characters !" })
+            return res.status(400).json({ err: "password is over the 8 characters !" })
         }
         else if (password.length < 8) {
-            return res.status(400).json({ msg: "password is under the 8 characters !" })
+            return res.status(400).json({ err: "password is under the 8 characters !" })
         }
         else if (!findEmail) {
-            return res.status(400).json({ msg: "Invalid email and password !" })
+            return res.status(400).json({ err: "Invalid Credentials !" })
         } else {
 
             const matchPassword = await bcrypt.compare(password, findEmail.password);
             if (!matchPassword) {
-                return res.status(400).json({ msg: "Invalid email or password!" });
+                return res.status(400).json({ err: "Invalid Credentials !" });
             }
 
             const token = setUser(findEmail)
@@ -80,7 +80,7 @@ async function signin(req, res) {
             return res.status(201).json({ msg: `Your email is : ${email} and Password is ${password}`, role: findEmail.role, token })
         }
     } catch (error) {
-        return res.status(400).json({ msg: "error found", error })
+        return res.status(400).json({ err: "error found", error })
     }
 }
 
